@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "XamlBrewer.WinUI3.SqlConnectionSettings.Sample (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "XamlBrewer.WinUI3.SqlConnectionSettings.Sample (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

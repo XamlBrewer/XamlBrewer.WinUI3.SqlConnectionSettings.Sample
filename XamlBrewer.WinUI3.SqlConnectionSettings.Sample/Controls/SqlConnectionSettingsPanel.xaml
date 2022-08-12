@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="XamlBrewer.WinUI3.Controls.SqlConnectionSettingsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:XamlBrewer.WinUI3.SqlConnectionSettings.Sample.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+             mc:Ignorable="d">
+
+    <StackPanel Spacing="6">
+        <labs:SettingsCard Description="Name or network address of the SQL Server instance."
+                           Header="Instance Name"
+                           Icon="&#xE968;">
+            <TextBox Text="{x:Bind Server, Mode=TwoWay}"
+                     MinWidth="200" />
+        </labs:SettingsCard>
+
+        <labs:SettingsCard Header="Authentication"
+                           Description="Authentication method."
+                           Icon="&#xE77B;">
+            <ComboBox SelectedIndex="0"
+                      ItemsSource="{x:Bind AuthenticationProtocols}" />
+        </labs:SettingsCard>
+
+        <labs:SettingsCard Header="User Id"
+                           Margin="0 -5 0 0">
+            <labs:SettingsCard.Icon>
+                <FontIcon Glyph="&#xE7EF;"
+                          Foreground="Transparent" />
+            </labs:SettingsCard.Icon>
+            <TextBox Text="{x:Bind UserId, Mode=TwoWay}"
+                     MinWidth="200" />
+        </labs:SettingsCard>
+
+        <labs:SettingsCard Header="Password"
+                           Margin="0 -5 0 0">
+            <labs:SettingsCard.Icon>
+                <FontIcon Glyph="&#xE7EF;"
+                          Foreground="Transparent" />
+            </labs:SettingsCard.Icon>
+            <PasswordBox Password="{x:Bind Password, Mode=TwoWay}"
+                         MinWidth="200" />
+        </labs:SettingsCard>
+
+        <labs:SettingsCard Description="Name of the database."
+                           Header="Database"
+                           Icon="&#xEE94;">
+            <Grid>
+                <AutoSuggestBox Text="{x:Bind Database, Mode=TwoWay}"
+                                QueryIcon="Find"
+                                MinWidth="200" />
+                <ProgressBar IsIndeterminate="{x:Bind IsBusy, Mode=OneWay}"
+                             VerticalAlignment="Bottom" />
+            </Grid>
+        </labs:SettingsCard>
+
+        <labs:SettingsCard Header="Connection String"
+                           Description="See, modify, and test the connection string."
+                           Icon="&#xEA37;">
+            <!-- Will expand the settings card's height -->
+            <!--<Expander Header="Open" MinWidth="200"></Expander>-->
+            <Button Content="Open"
+                    MinWidth="200">
+                <Button.Flyout>
+                    <Flyout>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{x:Bind ConnectionString, Mode=TwoWay}"
+                                     TextWrapping="Wrap"
+                                     MinWidth="200"
+                                     MaxWidth="200"
+                                     Grid.ColumnSpan="2" />
+                            <Button Content="Test"
+                                    Margin="0 6 6 0"
+                                    Grid.Row="1" />
+                            <FontIcon Glyph="&#xE730;"
+                                      Grid.Row="1"
+                                      Grid.Column="1"
+                                      HorizontalAlignment="Right"
+                                      Foreground="Red">
+                                <ToolTipService.ToolTip>
+                                    <TextBlock Text="Binding Error Message" />
+                                </ToolTipService.ToolTip>
+                            </FontIcon>
+                            <FontIcon Glyph="&#xE8E1;"
+                                      Grid.Row="1"
+                                      Grid.Column="1"
+                                      HorizontalAlignment="Right"
+                                      Foreground="Green">
+                                <ToolTipService.ToolTip>OK</ToolTipService.ToolTip>
+                            </FontIcon>
+                            <ProgressBar IsIndeterminate="{x:Bind IsBusy, Mode=OneWay}"
+                                         VerticalAlignment="Bottom"
+                                         Grid.Row="1"
+                                         Grid.ColumnSpan="2" />
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </labs:SettingsCard>
+    </StackPanel>
+</UserControl>
