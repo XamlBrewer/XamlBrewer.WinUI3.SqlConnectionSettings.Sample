@@ -1,39 +1,52 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.Data.SqlClient;
-using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace XamlBrewer.WinUI3.Controls
 {
     public sealed partial class SqlConnectionSettingsPanel : UserControl, INotifyPropertyChanged
     {
-        private bool isBusy = true;
+        private bool isFetchingDatabases;
+        private bool isConnecting;
 
-        private string connectionString;
+        private List<string> databases = new();
 
-        private List<string> databases = new List<string>();
-
-        private SqlConnectionStringBuilder builder = new();
+        private readonly SqlConnectionStringBuilder builder = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public SqlConnectionSettingsPanel()
         {
+            builder.IntegratedSecurity = true;
+            builder.TrustServerCertificate = true;
             InitializeComponent();
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is busy.
+        /// Gets or sets a value indicating whether this instance is busy getting the list of databases.
         /// </summary>
-        public bool IsBusy
+        public bool IsFetchingDatabases
         {
-            get { return isBusy; }
+            get { return isFetchingDatabases; }
             set
             {
-                isBusy = value;
+                isFetchingDatabases = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is busy connecting.
+        /// </summary>
+        public bool IsConnecting
+        {
+            get { return isConnecting; }
+            set
+            {
+                isConnecting = value;
                 OnPropertyChanged();
             }
         }
@@ -111,8 +124,7 @@ namespace XamlBrewer.WinUI3.Controls
             get { return builder.ConnectionString; }
             set
             {
-                connectionString = value;
-                builder.ConnectionString = connectionString;
+                builder.ConnectionString = value;
                 OnPropertyChanged();
             }
         }
@@ -130,5 +142,52 @@ namespace XamlBrewer.WinUI3.Controls
             "Azure Active Directory - Password",
             "Azure Active Directory - Integrated"
         };
+
+        private async void DatabaseComboBox_DropDownOpened(object sender, object e)
+        {
+            if (string.IsNullOrWhiteSpace(Server))
+            {
+                return;
+            }
+
+            IsFetchingDatabases = true;
+
+            var databases = new List<string>();
+
+            try
+            {
+                using (var connection = new SqlConnection(builder.ConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using var command = connection.CreateCommand();
+                    command.CommandText = "SELECT [name] FROM sys.databases ORDER BY [name]";
+
+                    using SqlDataReader reader = await command.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        databases.Add(reader.GetString(0));
+                    }
+                }
+
+                Databases = databases;
+            }
+            catch (Exception ex)
+            {
+                Databases = new List<string>();
+            }
+            finally
+            {
+                IsFetchingDatabases = false;
+            }
+        }
+
+        private void Database_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Any())
+            {
+                Database = e.AddedItems.First().ToString();
+            }
+        }
     }
 }

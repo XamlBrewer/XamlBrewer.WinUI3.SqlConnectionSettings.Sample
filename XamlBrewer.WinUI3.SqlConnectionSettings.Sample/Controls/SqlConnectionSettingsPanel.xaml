@@ -46,10 +46,19 @@
                            Header="Database"
                            Icon="&#xEE94;">
             <Grid>
-                <AutoSuggestBox Text="{x:Bind Database, Mode=TwoWay}"
+                <!-- AutoSuggestBox only works properly when the cursor is in the box -->
+                <!--<AutoSuggestBox Text="{x:Bind Database, Mode=TwoWay}" 
+                                QuerySubmitted="Database_QuerySubmitted"
+                                ItemsSource="{x:Bind Databases, Mode=OneWay}"
+                                UpdateTextOnSelect="True"
                                 QueryIcon="Find"
-                                MinWidth="200" />
-                <ProgressBar IsIndeterminate="{x:Bind IsBusy, Mode=OneWay}"
+                                MinWidth="200" />-->
+                <ComboBox DropDownOpened="DatabaseComboBox_DropDownOpened"
+                          ItemsSource="{x:Bind Databases, Mode=OneWay}"
+                          SelectionChanged="Database_SelectionChanged"
+                          IsEditable="True"
+                          MinWidth="200" />
+                <ProgressBar IsIndeterminate="{x:Bind IsFetchingDatabases, Mode=OneWay}"
                              VerticalAlignment="Bottom" />
             </Grid>
         </labs:SettingsCard>
@@ -60,7 +69,8 @@
             <!-- Will expand the settings card's height -->
             <!--<Expander Header="Open" MinWidth="200"></Expander>-->
             <Button Content="Open"
-                    MinWidth="200">
+                    MinWidth="200"
+                    Style="{StaticResource AccentButtonStyle}">
                 <Button.Flyout>
                     <Flyout>
                         <Grid>
@@ -79,7 +89,8 @@
                                      Grid.ColumnSpan="2" />
                             <Button Content="Test"
                                     Margin="0 6 6 0"
-                                    Grid.Row="1" />
+                                    Grid.Row="1"
+                                    Style="{StaticResource AccentButtonStyle}" />
                             <FontIcon Glyph="&#xE730;"
                                       Grid.Row="1"
                                       Grid.Column="1"
@@ -96,7 +107,7 @@
                                       Foreground="Green">
                                 <ToolTipService.ToolTip>OK</ToolTipService.ToolTip>
                             </FontIcon>
-                            <ProgressBar IsIndeterminate="{x:Bind IsBusy, Mode=OneWay}"
+                            <ProgressBar IsIndeterminate="{x:Bind IsConnecting, Mode=OneWay}"
                                          VerticalAlignment="Bottom"
                                          Grid.Row="1"
                                          Grid.ColumnSpan="2" />
