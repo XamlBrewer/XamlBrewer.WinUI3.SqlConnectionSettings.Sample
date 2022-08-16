@@ -19,10 +19,12 @@
                            Description="Authentication method."
                            Icon="&#xE77B;">
             <ComboBox SelectedIndex="0"
-                      ItemsSource="{x:Bind AuthenticationProtocols}" />
+                      ItemsSource="{x:Bind AuthenticationProtocols}"
+                      SelectionChanged="Authentication_SelectionChanged" />
         </labs:SettingsCard>
 
         <labs:SettingsCard Header="User Id"
+                           IsEnabled="False"
                            Margin="0 -5 0 0">
             <labs:SettingsCard.Icon>
                 <FontIcon Glyph="&#xE7EF;"
@@ -33,6 +35,7 @@
         </labs:SettingsCard>
 
         <labs:SettingsCard Header="Password"
+                           IsEnabled="False"
                            Margin="0 -5 0 0">
             <labs:SettingsCard.Icon>
                 <FontIcon Glyph="&#xE7EF;"

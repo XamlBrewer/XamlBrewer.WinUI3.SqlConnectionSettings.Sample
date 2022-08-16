@@ -10,3 +10,7 @@ Demonstrates how to build a WinUI 3 Settings Panel for a SQL Server connectionst
 * Test connection
 
 Uses the currently experimental SettingsCard control from Windows Community Toolkit Labs.
+
+<a href="https://www.buymeacoffee.com/xamlbrewer" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
+![Screenshot](Assets/ConnectionOK.png?raw=true)

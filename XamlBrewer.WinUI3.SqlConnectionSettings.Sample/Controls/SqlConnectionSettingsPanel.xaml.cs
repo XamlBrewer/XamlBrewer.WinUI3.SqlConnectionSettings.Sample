@@ -220,5 +220,10 @@ namespace XamlBrewer.WinUI3.Controls
             RedIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             GreenIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         }
+
+        private void Authentication_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
