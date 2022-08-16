@@ -172,7 +172,7 @@ namespace XamlBrewer.WinUI3.Controls
 
                 Databases = databases;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Databases = new List<string>();
             }
@@ -188,6 +188,37 @@ namespace XamlBrewer.WinUI3.Controls
             {
                 Database = e.AddedItems.First().ToString();
             }
+        }
+
+        private async void ConnectionButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            IsConnecting = true;
+            try
+            {
+                using (var connection = new SqlConnection(builder.ConnectionString))
+                {
+                    await connection.OpenAsync();
+                }
+
+                RedIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                GreenIcon.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                ErrorText.Text = ex.Message;
+                GreenIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                RedIcon.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            }
+            finally
+            {
+                IsConnecting = false;
+            }
+        }
+
+        private void ConnectionFlyout_Opened(object sender, object e)
+        {
+            RedIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            GreenIcon.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         }
     }
 }

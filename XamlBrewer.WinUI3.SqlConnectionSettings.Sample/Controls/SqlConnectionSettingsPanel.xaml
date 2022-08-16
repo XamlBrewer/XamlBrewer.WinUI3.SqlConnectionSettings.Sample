@@ -72,7 +72,7 @@
                     MinWidth="200"
                     Style="{StaticResource AccentButtonStyle}">
                 <Button.Flyout>
-                    <Flyout>
+                    <Flyout Opened="ConnectionFlyout_Opened">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -88,19 +88,25 @@
                                      MaxWidth="200"
                                      Grid.ColumnSpan="2" />
                             <Button Content="Test"
+                                    Click="ConnectionButton_Click"
                                     Margin="0 6 6 0"
                                     Grid.Row="1"
                                     Style="{StaticResource AccentButtonStyle}" />
-                            <FontIcon Glyph="&#xE730;"
+                            <FontIcon x:Name="RedIcon"
+                                      Visibility="Collapsed"
+                                      Glyph="&#xE730;"
                                       Grid.Row="1"
                                       Grid.Column="1"
                                       HorizontalAlignment="Right"
                                       Foreground="Red">
                                 <ToolTipService.ToolTip>
-                                    <TextBlock Text="Binding Error Message" />
+                                    <TextBlock x:Name="ErrorText"
+                                               TextWrapping="Wrap" />
                                 </ToolTipService.ToolTip>
                             </FontIcon>
-                            <FontIcon Glyph="&#xE8E1;"
+                            <FontIcon x:Name="GreenIcon"
+                                      Visibility="Collapsed"
+                                      Glyph="&#xE8E1;"
                                       Grid.Row="1"
                                       Grid.Column="1"
                                       HorizontalAlignment="Right"
@@ -109,7 +115,7 @@
                             </FontIcon>
                             <ProgressBar IsIndeterminate="{x:Bind IsConnecting, Mode=OneWay}"
                                          VerticalAlignment="Bottom"
-                                         Grid.Row="1"
+                                         Grid.Row="0"
                                          Grid.ColumnSpan="2" />
                         </Grid>
                     </Flyout>
