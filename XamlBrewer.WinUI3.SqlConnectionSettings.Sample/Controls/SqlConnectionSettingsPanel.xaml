@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="XamlBrewer.WinUI3.Controls.SqlConnectionSettingsPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:XamlBrewer.WinUI3.SqlConnectionSettings.Sample.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -24,7 +23,8 @@
                       MinWidth="200" />
         </labs:SettingsCard>
 
-        <labs:SettingsCard Header="User Id"
+        <labs:SettingsCard x:Name="crdUserId"
+                           Header="User Id"
                            IsEnabled="False"
                            Margin="0 -5 0 0">
             <labs:SettingsCard.Icon>
@@ -35,7 +35,8 @@
                      MinWidth="200" />
         </labs:SettingsCard>
 
-        <labs:SettingsCard Header="Password"
+        <labs:SettingsCard x:Name="crdPassword"
+                           Header="Password"
                            IsEnabled="False"
                            Margin="0 -5 0 0">
             <labs:SettingsCard.Icon>

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms.Design;
 
 namespace XamlBrewer.WinUI3.Controls
 {
@@ -22,8 +21,6 @@ namespace XamlBrewer.WinUI3.Controls
 
         public SqlConnectionSettingsPanel()
         {
-            builder.IntegratedSecurity = true;
-            builder.TrustServerCertificate = true;
             InitializeComponent();
         }
 
@@ -137,17 +134,14 @@ namespace XamlBrewer.WinUI3.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
         }
 
-        private List<string> AuthenticationProtocols
+        private IEnumerable<string> AuthenticationProtocols
         {
             get
             {
-                var result = new List<string>();
                 foreach (string str in Enum.GetNames(typeof(SqlAuthenticationMethod)))
                 {
-                    result.Add(str.SplitCamelCase());
+                    yield return str.SplitCamelCase();
                 }
-
-                return result;
             }
         }
 
@@ -231,7 +225,82 @@ namespace XamlBrewer.WinUI3.Controls
 
         private void Authentication_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            builder.Authentication = (SqlAuthenticationMethod)(sender as ComboBox).SelectedIndex;
 
+            // You may not set both !!!
+            // builder.IntegratedSecurity = builder.Authentication == SqlAuthenticationMethod.ActiveDirectoryIntegrated;
+
+            // Process UserId and Password boxes.
+            // Based on the descriptions and sample connection strings here:
+            // https://docs.microsoft.com/en-us/sql/connect/ado-net/sql/azure-active-directory-authentication?view=sql-server-ver16
+            // Not all scenarios could be tested.
+            switch (builder.Authentication)
+            {
+                case SqlAuthenticationMethod.ActiveDirectoryIntegrated:
+                    ActivateUserId(); // User Id is optional.
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryInteractive:
+                    ActivateUserId(); // User Id is optional.
+                    DeactivatePassword(); // Password provided via authentication prompt.
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryPassword:
+                    ActivateUserId();
+                    ActivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryServicePrincipal:
+                    ActivateUserId();
+                    ActivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryDeviceCodeFlow:
+                    DeactivateUserId();
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryManagedIdentity:
+                    ActivateUserId();
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryMSI:
+                    ActivateUserId();
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.ActiveDirectoryDefault:
+                    DeactivateUserId();
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.NotSpecified:
+                    DeactivateUserId();
+                    DeactivatePassword();
+                    break;
+                case SqlAuthenticationMethod.SqlPassword:
+                    ActivateUserId();
+                    ActivatePassword();
+                    break;
+            }
+        }
+
+        private void ActivateUserId()
+        {
+            crdUserId.IsEnabled = true;
+        }
+
+        private void DeactivateUserId()
+        {
+            UserId = string.Empty;
+            builder.Remove(nameof(UserId));
+            crdUserId.IsEnabled = false;
+        }
+
+        private void ActivatePassword()
+        {
+            crdPassword.IsEnabled = true;
+        }
+
+        private void DeactivatePassword()
+        {
+            Password = string.Empty;
+            builder.Remove(nameof(Password));
+            crdPassword.IsEnabled = false;
         }
     }
 
