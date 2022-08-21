@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms.Design;
 
 namespace XamlBrewer.WinUI3.Controls
 {
@@ -135,13 +137,19 @@ namespace XamlBrewer.WinUI3.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
         }
 
-        private List<string> AuthenticationProtocols => new() {
-            "Windows Authentication",
-            "SQL Server Authentication",
-            "Azure Active Directory - Universal with MFA",
-            "Azure Active Directory - Password",
-            "Azure Active Directory - Integrated"
-        };
+        private List<string> AuthenticationProtocols
+        {
+            get
+            {
+                var result = new List<string>();
+                foreach (string str in Enum.GetNames(typeof(SqlAuthenticationMethod)))
+                {
+                    result.Add(str.SplitCamelCase());
+                }
+
+                return result;
+            }
+        }
 
         private async void DatabaseComboBox_DropDownOpened(object sender, object e)
         {
@@ -224,6 +232,22 @@ namespace XamlBrewer.WinUI3.Controls
         private void Authentication_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+    }
+
+    internal static class StringExtensions
+    {
+        public static string SplitCamelCase(this string str)
+        {
+            return Regex.Replace(
+                Regex.Replace(
+                    str,
+                    @"(\P{Ll})(\P{Ll}\p{Ll})",
+                    "$1 $2"
+                ),
+                @"(\p{Ll})(\P{Ll})",
+                "$1 $2"
+            );
         }
     }
 }
