@@ -124,6 +124,7 @@ namespace XamlBrewer.WinUI3.Controls
             set
             {
                 builder.ConnectionString = value;
+                cboAuthenticationProtocols.SelectedIndex = (int)builder.Authentication;
                 OnPropertyChanged();
             }
         }

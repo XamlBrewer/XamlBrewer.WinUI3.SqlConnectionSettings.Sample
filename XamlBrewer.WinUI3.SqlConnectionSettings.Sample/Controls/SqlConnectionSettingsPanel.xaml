@@ -17,7 +17,8 @@
         <labs:SettingsCard Header="Authentication"
                            Description="Authentication method."
                            Icon="&#xE77B;">
-            <ComboBox SelectedIndex="0"
+            <ComboBox x:Name="cboAuthenticationProtocols"
+                      SelectedIndex="0"
                       ItemsSource="{x:Bind AuthenticationProtocols}"
                       SelectionChanged="Authentication_SelectionChanged"
                       MinWidth="200" />
