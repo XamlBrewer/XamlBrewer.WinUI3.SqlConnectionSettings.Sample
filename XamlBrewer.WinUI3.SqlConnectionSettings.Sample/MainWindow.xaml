@@ -11,11 +11,41 @@
           HorizontalAlignment="Stretch">
 
         <!-- Main Beef -->
-        <StackPanel Spacing="12"
-                    Margin="24">
-            <TextBlock Foreground="{StaticResource SystemAccentColor}">SQL Server Connection Settings</TextBlock>
-            <controls:SqlConnectionSettingsPanel></controls:SqlConnectionSettingsPanel>
-        </StackPanel>
+        <TabView Margin="24"
+                 IsAddTabButtonVisible="False"
+                 BorderThickness="1"
+                 BorderBrush="{ThemeResource SmokeFillColorDefaultBrush}"
+                 CornerRadius="4">
+            <TabViewItem Header="Panel"
+                         IsClosable="False">
+                <StackPanel Margin="12 "
+                            Spacing="12">
+                    <TextBlock Foreground="{StaticResource SystemAccentColor}">SQL Server Connection Settings</TextBlock>
+                    <controls:SqlConnectionSettingsPanel />
+                </StackPanel>
+            </TabViewItem>
+            <TabViewItem Header="Flyout"
+                         IsClosable="False">
+                <Button 
+                        Margin="12">
+                    <Button.Content>
+                        <TextBlock Foreground="{StaticResource SystemAccentColor}">SQL Server Connection Settings</TextBlock>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="MinWidth"
+                                            Value="640" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <controls:SqlConnectionSettingsPanel />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </TabViewItem>
+        </TabView>
+
         <!-- Theme Switcher -->
         <Button Click="ToggleButton_Click"
                 Background="Transparent"
