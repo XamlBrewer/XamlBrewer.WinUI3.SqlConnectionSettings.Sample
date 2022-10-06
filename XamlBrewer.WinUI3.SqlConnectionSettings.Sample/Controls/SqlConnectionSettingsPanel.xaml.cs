@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace XamlBrewer.WinUI3.Controls
 {
@@ -59,6 +60,7 @@ namespace XamlBrewer.WinUI3.Controls
             set
             {
                 builder.DataSource = value;
+                Databases = new List<string>(); // Clear the database list.
                 OnPropertyChanged();
             }
         }
@@ -148,8 +150,19 @@ namespace XamlBrewer.WinUI3.Controls
 
         private async void DatabaseComboBox_DropDownOpened(object sender, object e)
         {
+            await RefreshDatabases();
+        }
+
+        private async Task RefreshDatabases()
+        {
             if (string.IsNullOrWhiteSpace(Server))
             {
+                return;
+            }
+
+            if (Databases.Any())
+            {
+                // Already fetched.
                 return;
             }
 
