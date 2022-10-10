@@ -61,6 +61,7 @@
                                 MinWidth="200" />-->
                 <ComboBox DropDownOpened="DatabaseComboBox_DropDownOpened"
                           ItemsSource="{x:Bind Databases, Mode=OneWay}"
+                          Text="{x:Bind Database, Mode=TwoWay}"
                           SelectionChanged="Database_SelectionChanged"
                           IsEditable="True"
                           MinWidth="200" />

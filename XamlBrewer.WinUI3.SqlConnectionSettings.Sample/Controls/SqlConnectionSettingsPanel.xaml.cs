@@ -60,7 +60,6 @@ namespace XamlBrewer.WinUI3.Controls
             set
             {
                 builder.DataSource = value;
-                Databases = new List<string>(); // Clear the database list.
                 OnPropertyChanged();
             }
         }
@@ -150,29 +149,39 @@ namespace XamlBrewer.WinUI3.Controls
 
         private async void DatabaseComboBox_DropDownOpened(object sender, object e)
         {
-            await RefreshDatabases();
+            await RefreshDatabaseList();
         }
 
-        private async Task RefreshDatabases()
+        private void ClearDatabaseList()
+        {
+            var databases = new List<string>();
+
+            if (!string.IsNullOrEmpty(Database))
+            {
+                databases.Add(Database);
+            }
+
+            Databases = databases;
+        }
+
+        private async Task RefreshDatabaseList()
         {
             if (string.IsNullOrWhiteSpace(Server))
             {
                 return;
             }
 
-            if (Databases.Any())
-            {
-                // Already fetched.
-                return;
-            }
-
             IsFetchingDatabases = true;
-
-            var databases = new List<string>();
 
             try
             {
-                using (var connection = new SqlConnection(builder.ConnectionString))
+                // Remove initial catalog
+                var connector = new SqlConnectionStringBuilder(builder.ConnectionString);
+                connector.InitialCatalog = String.Empty;
+
+                var databases = new List<string>();
+
+                using (var connection = new SqlConnection(connector.ConnectionString))
                 {
                     await connection.OpenAsync();
 
@@ -186,11 +195,16 @@ namespace XamlBrewer.WinUI3.Controls
                     }
                 }
 
+                if (!string.IsNullOrEmpty(Database) || !databases.Contains(Database))
+                {
+                    databases.Insert(0, Database);
+                }
+
                 Databases = databases;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Databases = new List<string>();
+                ClearDatabaseList();
             }
             finally
             {
