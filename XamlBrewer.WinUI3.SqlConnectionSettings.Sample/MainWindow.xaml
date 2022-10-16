@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="using:XamlBrewer.WinUI3.Controls"
+        xmlns:labs="using:CommunityToolkit.Labs.WinUI"
         mc:Ignorable="d">
     <Grid x:Name="Root"
           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -26,8 +27,7 @@
             </TabViewItem>
             <TabViewItem Header="Flyout"
                          IsClosable="False">
-                <Button 
-                        Margin="12">
+                <Button Margin="12">
                     <Button.Content>
                         <TextBlock Foreground="{StaticResource SystemAccentColor}">SQL Server Connection Settings</TextBlock>
                     </Button.Content>
@@ -43,6 +43,29 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
+            </TabViewItem>
+            <TabViewItem Header="SettingsCard"
+                         IsClosable="False">
+                <labs:SettingsCard Header="Database Connection"
+                                   Description="Configure the database connection string."
+                                   Icon="&#xEE94;"
+                                   Margin="12">
+                    <Button Content="Configure"
+                            MinWidth="200"
+                            Style="{StaticResource AccentButtonStyle}">
+                        <Button.Flyout>
+                            <Flyout>
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="MinWidth"
+                                                Value="640" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+                                <controls:SqlConnectionSettingsPanel />
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </labs:SettingsCard>
             </TabViewItem>
         </TabView>
 
